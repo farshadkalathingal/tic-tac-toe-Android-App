@@ -1,0 +1,170 @@
+package com.example.mytictactoe;
+
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.os.IBinder;
+import android.os.PowerManager;
+import android.view.View;
+import android.widget.EditText;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class PlayerName extends AppCompatActivity {
+
+    private SharedPreferences preferences;
+    HomeWatcher mHomeWatcher;
+    private boolean musciStatus;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_player_name);
+        preferences = getSharedPreferences(MainActivity.SETTINGS_KEY, MODE_PRIVATE);
+        musciStatus = preferences.getBoolean("music", true);
+        //BIND Music Service
+        if( musciStatus ) {
+            playMusic();
+        }
+    }
+    public void submitName(View view) {
+        EditText player1NameBox = (EditText) findViewById(R.id.player1);
+        EditText player2NameBox = (EditText) findViewById(R.id.player2);
+        String player1NameText = player1NameBox.getText().toString();
+        String player2NameText = player2NameBox.getText().toString();
+        String number = "999";
+
+
+
+//        if(player1NameText.equals("")||player2NameText.equals("")){
+//            toastMessage("Please enter names of both the players");
+//            return;
+//        }
+        if(player1NameText.equals("")){
+            player1NameText="Player 1";
+            player1NameBox.setText(R.string.player_1_default_name);
+        }
+        if(player2NameText.equals("")){
+            player2NameText="Player 2";
+            player2NameBox.setText(R.string.player_2_default_name);
+        }
+        Intent intent = new Intent(this,PlayGame.class);
+        intent.putExtra("Player 1",player1NameText);
+        intent.putExtra("Player 2",player2NameText);
+        intent.putExtra("Number",number);
+        if(intent.resolveActivity(getPackageManager())!=null){
+            startActivity(intent);
+            finish();
+        }
+    }
+//    private void toastMessage(String string)
+//    {
+//        Context context = getApplicationContext();
+//        int duration = Toast.LENGTH_SHORT;
+//        Toast toast = Toast.makeText(context, string,duration);
+//        toast.show();
+//    }
+public void playMusic() {
+    doBindService();
+    Intent music = new Intent();
+    music.setClass(this, MusicService.class);
+    startService(music);
+
+    //Start HomeWatcher
+    mHomeWatcher = new HomeWatcher(this);
+    mHomeWatcher.setOnHomePressedListener(new HomeWatcher.OnHomePressedListener() {
+        @Override
+        public void onHomePressed() {
+            if (mServ != null) {
+                mServ.pauseMusic();
+            }
+        }
+
+        @Override
+        public void onHomeLongPressed() {
+            if (mServ != null) {
+                mServ.pauseMusic();
+            }
+        }
+    });
+    mHomeWatcher.startWatch();
+}
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+    //Bind/Unbind music service
+    private boolean mIsBound = false;
+    private MusicService mServ;
+    private ServiceConnection Scon =new ServiceConnection(){
+
+        public void onServiceConnected(ComponentName name, IBinder
+                binder) {
+            mServ = ((MusicService.ServiceBinder)binder).getService();
+        }
+
+        public void onServiceDisconnected(ComponentName name) {
+            mServ = null;
+        }
+    };
+
+    void doBindService(){
+        bindService(new Intent(this,MusicService.class),
+                Scon, Context.BIND_AUTO_CREATE);
+        mIsBound = true;
+    }
+
+    void doUnbindService()
+    {
+        if(mIsBound)
+        {
+            unbindService(Scon);
+            mIsBound = false;
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (mServ != null) {
+            mServ.resumeMusic();
+        }
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        //Detect idle screen
+        PowerManager pm = (PowerManager)
+                getSystemService(Context.POWER_SERVICE);
+        boolean isScreenOn = false;
+        if (pm != null) {
+            isScreenOn = pm.isScreenOn();
+        }
+
+        if (!isScreenOn) {
+            if (mServ != null) {
+                mServ.pauseMusic();
+            }
+        }
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        //UNBIND music service
+        doUnbindService();
+        Intent music = new Intent();
+        music.setClass(this,MusicService.class);
+        stopService(music);
+
+    }
+}

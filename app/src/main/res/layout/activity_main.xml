@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.mytictactoe.MainActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="top"
+        android:src="@drawable/back"
+        android:scaleType="centerCrop"/>
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="30dp">
+
+        <TextView
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/allerta_stencil"
+            android:text="My Tic Tac Toe"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="40sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/twoplayer"
+            android:onClick="gameSelection"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_play_arrow"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Play"
+                android:textColor="#fff"
+                android:textSize="25sp"
+                android:layout_gravity="center"
+                android:gravity="center"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/twoplayer"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true">
+        <LinearLayout
+            android:id="@+id/options"
+            android:onClick="settings"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginTop="100dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_settings_black_24dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Settings"
+                android:textColor="#fff"
+                android:textSize="15sp"
+                android:layout_gravity="center"
+                android:gravity="center"/>
+
+        </LinearLayout>
+        </LinearLayout>
+    <!--<Button
+        android:id="@+id/twoplayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-20dp"
+        android:text="New Game"
+        android:textSize="30sp"
+        android:onClick="gameSelection"
+        android:textAllCaps="false"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:drawableTop="@drawable/ic_play_arrow"
+        android:padding="10dp"/>->
+    <!-<Button
+        android:id="@+id/singleplayer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:text="Single Player"
+        android:textSize="40sp"
+        android:onClick="playSinglePGame"
+        android:background="#66ffff"
+        android:textColor="#003300"
+        android:textAllCaps="false"
+        android:padding="10dp"/>-->
+    <!--<Button
+        android:id="@+id/options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Options"
+        android:textAllCaps="false"
+        android:textSize="30sp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/twoplayer"
+        android:padding="10dp"
+        android:onClick="settings"/>-->
+    </RelativeLayout>
+</FrameLayout>
